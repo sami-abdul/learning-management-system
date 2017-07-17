@@ -7,6 +7,7 @@ import Home from './Home'
 import BookDetailsPage from './BookDetailsPage'
 import NotifyMe from './notifications/NotifyMe'
 import { Switch, Route } from 'react-router-dom'
+import { socketConnect } from 'socket.io-react';
 
 export const mapStateToProps = (state, ownProps) => {
   return {
@@ -37,6 +38,13 @@ export class BooksPage extends React.Component {
     if(!this.props.books.allBooks.length) {
         this.props.getAllBooks()
     }
+    this.props.socket.emit('SOCKET_MSG', {
+      title: 'GET_RATINGS'
+    });
+    this.props.socket.on('SOCKET_MSG_RATING_RECEIVE', result => {
+      this.props.getRatings(result);
+    });
+
     this.props.shuffleAllBooks(this.props.books.allBooks)
     if(!this.props.accounts) {
       this.props.getAllMembers()
@@ -128,4 +136,4 @@ export class BooksPage extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, libraryActions)(BooksPage)
+export default connect(mapStateToProps, libraryActions)(socketConnect(BooksPage))

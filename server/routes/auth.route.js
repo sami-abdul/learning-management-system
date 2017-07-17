@@ -16,7 +16,7 @@ router.route('/getlmskeys/')
 router.route('/clearlmskeys/')
     .get(AuthCtrl.clearAllLmsKey)
 
-router.route('/updatelmskey/:email/:lmskey')
-    .get(AuthCtrl.updateLmsKey)
+/* router.route('/updatelmskey/:email/:lmskey')
+    .get(AuthCtrl.updateLmsKey) */
 
 export default router;

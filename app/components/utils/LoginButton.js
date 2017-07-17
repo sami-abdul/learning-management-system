@@ -17,16 +17,13 @@ const LoginButton = ({
         className={className}
         onClick={() => success()}
         disabled={disabled}>{buttonText}</button>
-    : <GoogleLogin
-        clientId='672617539191-jqtmbeeu1gc1nvpm2obr2n3m3gtkn8sk.apps.googleusercontent.com'
-        buttonText={buttonText}
+    : <a
         className={className}
-        onSuccess={(response) => loginSuccess(response)}
-        onFailure={(response) => loginFailure(response)}
-        disabled={disabled}>
+        disabled={disabled}
+        href={ !disabled ? 'auth/google' : 'javascript:void(0)' }>
           { logo && <span><span className={logo}></span>&nbsp;&nbsp;</span> }
           <strong>{buttonText}</strong>
-        </GoogleLogin>
+        </a>
   )
 }
 

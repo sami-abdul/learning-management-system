@@ -29,7 +29,8 @@ const UserAuthRoute = (app, passport) => {
             scope: [
                 'profile',
                 'email'
-            ]
+            ],
+            prompt : 'select_account'
         }
         ));
 

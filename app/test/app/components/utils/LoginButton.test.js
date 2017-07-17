@@ -50,14 +50,6 @@ describe('LoginButton', () => {
     it('Should not be disabled',() => {
       expect(component.find('.btn').props().disabled).toEqual(false)
     })
-    it('Should trigger "loginSuccess" on success',() => {
-      component.find('.btn').simulate('success')
-      expect(props.loginSuccess.mock.calls.length).toBe(1)
-    })
-    it('Should trigger "loginFailure" on failure',() => {
-      component.find('.btn').simulate('failure')
-      expect(props.loginFailure.mock.calls.length).toBe(1)
-    })
   })
 
 
