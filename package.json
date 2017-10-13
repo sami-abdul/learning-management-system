@@ -82,7 +82,9 @@
     "redux": "^3.6.0",
     "redux-react-session": "^1.2.0",
     "redux-thunk": "^2.2.0",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "socket.io": "^2.0.3",
+    "socket.io-react": "^1.2.0"
   },
   "jest": {
     "moduleNameMapper": {

@@ -1,5 +1,3 @@
-import contractConfig from '../config'
-import { web3, lms } from '../web3'
 import actionType from './actionTypes'
 import { sessionService } from 'redux-react-session'
 import axios from 'axios'
@@ -88,7 +86,6 @@ export const getAllBooks = () => {
     dispatch(action(actionType.GET_ALL_BOOKS_LOADING, true))
     axios.get(apiList.books)
     .then((books) => {
-      dispatch(getRatings())
       dispatch(action(actionType.GET_ALL_BOOKS_SUCCESS, books.data.result))
       dispatch(action(actionType.GET_ALL_BOOKS_LOADING, false))
     }).catch((e) => {
@@ -282,7 +279,6 @@ export const logout = () => {
     axios.get(apiList.logout)
     .then((result) => {
       if(result.data.status){
-        console.log("user logged out");
       }
     })
     .catch((err) => {
@@ -299,7 +295,6 @@ export const getUserAuthStatus = () => {
   return (dispatch) => {
     axios.get(apiList.authUser)
     .then((result) => {
-      console.log("result auth", result);
       if(result.data.auth_status){
         dispatch(getMemberDetailsByEmail(result.data))
       }else{
@@ -377,23 +372,15 @@ export const getAllMembers = () => {
   }
 }
 
-export const getRatings = () => {
+export const getRatings = (result) => {
   return (dispatch) => {
     dispatch(action(actionType.GET_RATE_BOOK_LOADING, true))
-    var rateEvent = lms.Rate({}, {
-      fromBlock: 0,
-      toBlock: 'latest'
-    });
-    rateEvent.watch(function(e, result) {
-      rateEvent.stopWatching();
-      if (e) {
-        console.log("Error Occured", e)
-        dispatch(action(actionType.GET_RATE_BOOK_ERROR, NotificationType('error', 'Error', e.message)))
-      } else {
-        dispatch(action(actionType.GET_RATE_BOOK_SUCCESS, result.args))
-      }
-      dispatch(action(actionType.GET_RATE_BOOK_LOADING, false))
-    });
+    if(result.status){
+      dispatch(action(actionType.GET_RATE_BOOK_SUCCESS, result.args))      
+    }else{
+      dispatch(action(actionType.GET_RATE_BOOK_ERROR, NotificationType('error', 'Error', result.logs)))
+    }
+    dispatch(action(actionType.GET_RATE_BOOK_LOADING, false))
   }
 }
 
@@ -475,42 +462,32 @@ export const shuffleAllBooks = (books) =>{
   }
 }
 
-export const borrowEvent = (bookId) => {
+export const borrowEvent = (bookId, result) => {
   return (dispatch) => {
     dispatch(action(actionType.BORROW_EVENT_LOADING, true))
-    var borrowEvent = lms.Borrow({ bookId }, {
-      fromBlock: 0,
-      toBlock: 'latest'
-    });
-    borrowEvent.watch(function(e, result) {
-      borrowEvent.stopWatching();
-      if (e) {
-        console.log("Error Occured", e)
-        dispatch(action(actionType.BORROW_EVENT_ERROR, NotificationType('error', 'Error', e.message)))
-      } else {
+    if(result && result.args.bookId == bookId){
+      if(result.status){
         dispatch(action(actionType.BORROW_EVENT_SUCCESS, result.args))
+      }else{
+        console.log("Error Occured", result.logs)
+        dispatch(action(actionType.BORROW_EVENT_ERROR, NotificationType('error', 'Error', result.logs)))
       }
-      dispatch(action(actionType.BORROW_EVENT_LOADING, false))
-    });
+    }
+    dispatch(action(actionType.BORROW_EVENT_LOADING, false))
   }
 }
 
-export const returnEvent = ( bookId ) => {
+export const returnEvent = (bookId, result) => {
   return (dispatch) => {
     dispatch(action(actionType.RETURN_EVENT_LOADING, true))
-    var returnEvent = lms.Return({ bookId }, {
-      fromBlock: 0,
-      toBlock: 'latest'
-    });
-    returnEvent.watch(function(e, result) {
-      returnEvent.stopWatching();
-      if (e) {
-        console.log("Error Occured", e)
-        dispatch(action(actionType.RETURN_EVENT_ERROR, NotificationType('error', 'Error', e.message)))
-      } else {
+    if(result && result.args.bookId == bookId){
+      if(result.status){
         dispatch(action(actionType.RETURN_EVENT_SUCCESS, result.args))
+      }else{
+        console.log("Error Occured", result.logs)
+        dispatch(action(actionType.RETURN_EVENT_ERROR, NotificationType('error', 'Error', result.logs)))
       }
-      dispatch(action(actionType.RETURN_EVENT_LOADING, false))
-    });
+    }
+    dispatch(action(actionType.RETURN_EVENT_LOADING, false))
   }
 }

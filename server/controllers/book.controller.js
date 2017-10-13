@@ -102,7 +102,6 @@ export class BookController {
 			}
 		).then((receipt) => {
 			if(isSuccess(receipt)){
-				console.log(receipt);
 				res.json({
 					result : receipt,
 					status : true
@@ -129,7 +128,6 @@ export class BookController {
 			}
 		).then((receipt) => {
 			if(isSuccess(receipt)){
-				console.log(receipt);
 				res.json({
 					result : receipt,
 					status : true
@@ -155,7 +153,6 @@ export class BookController {
 			}
 		).then((receipt) => {
 			if(isSuccess(receipt)){
-				console.log(receipt);
 				res.json({
 					result : receipt,
 					status : true
@@ -205,6 +202,63 @@ export class BookController {
 				})
 			} else {
 				res.json({
+					args : result.args,
+					status : true
+				});
+			}
+		});
+	}
+	getRatingsUsingSocket(io, socketId){
+		lms.Rate({}, {
+			fromBlock: 0,
+			toBlock: 'latest'
+		},(e, result) => {
+			if (e) {
+				console.log("error in get ratings", e);
+				io.to(socketId).emit('SOCKET_MSG_RATING_RECEIVE', {
+					logs: e.message,
+					status: false
+				});
+			} else {
+				io.to(socketId).emit('SOCKET_MSG_RATING_RECEIVE', {
+					args : result.args,
+					status : true
+				});
+			}
+		});
+	}
+	getBorrowEvent(io, socketId, bookId){
+		lms.Borrow({ bookId }, {
+			fromBlock: 0,
+			toBlock: 'latest'
+		},(e, result) => {
+			if (e) {
+				console.log("error in get ratings", e);
+				io.to(socketId).emit('SOCKET_MSG_BORROW_EVENT_RECEIVE', {
+					logs: e.message,
+					status: false
+				});
+			} else {
+				io.to(socketId).emit('SOCKET_MSG_BORROW_EVENT_RECEIVE', {
+					args : result.args,
+					status : true
+				});
+			}
+		});
+	}
+	getReturnEvent(io, socketId, bookId){
+		lms.Return({ bookId }, {
+			fromBlock: 0,
+			toBlock: 'latest'
+		},(e, result) => {
+			if (e) {
+				console.log("error in get ratings", e);
+				io.to(socketId).emit('SOCKET_MSG_RETURN_EVENT_RECEIVE', {
+					logs: e.message,
+					status: false
+				});
+			} else {
+				io.to(socketId).emit('SOCKET_MSG_RETURN_EVENT_RECEIVE', {
 					args : result.args,
 					status : true
 				});

@@ -31,7 +31,11 @@ describe('BookHistory', () => {
         id: '0'
       },
       borrowEvent: jest.fn(),
-      returnEvent: jest.fn()
+      returnEvent: jest.fn(),
+      socket: {
+        on: jest.fn(),
+        emit: jest.fn()
+      }
     }
     component = shallow(<BookHistory {...props} />)
   })
@@ -51,6 +55,8 @@ describe('BookHistory', () => {
       props.book_history = undefined
       component = shallow(<BookHistory {...props} />)
       component.instance().componentDidMount()
+      props.borrowEvent(props.book.id, { args: "Something for test" })
+      props.returnEvent(props.book.id, { args: "Something for test" })
       expect(props.borrowEvent.mock.calls.length).toBe(1)
       expect(props.returnEvent.mock.calls.length).toBe(1)
     })
@@ -58,6 +64,8 @@ describe('BookHistory', () => {
       props.book.id = '1'
       component = shallow(<BookHistory {...props} />)
       component.instance().componentDidMount()
+      props.borrowEvent(props.book.id, { args: "Something for test" })
+      props.returnEvent(props.book.id, { args: "Something for test" })
       expect(props.borrowEvent.mock.calls.length).toBe(1)
       expect(props.returnEvent.mock.calls.length).toBe(1)
     })

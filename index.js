@@ -3,14 +3,22 @@ import express from 'express';
 import logger from 'morgan';
 import config from './server/config';
 const app = express();
-import routes from './server/routes/index.route';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import session from 'express-session';
 import flash from 'connect-flash';
+import socket from 'socket.io'
+import { createServer } from 'http'
+import routes from './server/routes/index.route';
 import passportStrategy from './server/helpers/passport.strategy';
 import UserAuthRoute from './server/routes/user.auth.route';
+import handleSocket from './server/helpers/handle.socket'
+
+// Attach socket with server
+var server = createServer(app); 
+var io = socket(server);
+handleSocket(io)
 
 // Console the logger
 if (config.env === 'development') {
@@ -55,9 +63,8 @@ app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname,'dist','index.html'));
 });
 
-
 // Start Server
-app.listen(config.port, 'localhost', function(err) {
+server.listen(config.port, 'localhost', function(err) {
   if (err) {
     console.log(err);
     return;
