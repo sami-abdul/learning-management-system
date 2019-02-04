@@ -74,11 +74,11 @@ contract LMS is Killable {
         }
     }
 
-    function LMS(string name, string email) payable {
+    function LMS() payable {
         // Owner is the first member of our library, at index 1 (NOT 0)
-        members[++numMembers] = Member(name, owner, email, MemberStatus.Active, now);
+        members[++numMembers] = Member("Abdul Sami", owner, "sami@gmail.com", MemberStatus.Active, now);
         memberIndex[owner] = numMembers;
-        emailIndex[email] = numMembers;
+        emailIndex["sami@gmail.com"] = numMembers;
     }
 
     function addMember(string name, address account, string email) public onlyOwner {
